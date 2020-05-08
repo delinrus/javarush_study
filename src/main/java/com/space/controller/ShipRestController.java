@@ -2,13 +2,12 @@ package com.space.controller;
 
 import com.space.model.Ship;
 import com.space.service.ShipService;
+import com.space.service.ShipServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/rest/ships")
@@ -31,5 +30,34 @@ public class ShipRestController {
         }
         return new ResponseEntity<>(ship, HttpStatus.OK);
     }
+
+    @RequestMapping(path = "/count", method = RequestMethod.GET)
+    public ResponseEntity<Integer> getShipsCount() {
+        Integer count = (int) shipService.count();
+        return new ResponseEntity<>(count, HttpStatus.OK);
+
+     //   return new ResponseEntity<> (HttpStatus.NOT_FOUND);
+    }
+
+    @RequestMapping(value = "{id}", method = RequestMethod.POST)
+    public ResponseEntity<Ship> updateShip(@PathVariable("id") Long shipId, @RequestBody Ship ship) {
+        if (ship == null || shipId == 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            Ship result = shipService.update(shipId, ship);
+            HttpHeaders headers = new HttpHeaders();
+            return new ResponseEntity<>(result, headers, HttpStatus.OK);
+        }
+        catch (ShipServiceImpl.ShipNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        catch (ShipServiceImpl.DataNotValidException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+
 
 }

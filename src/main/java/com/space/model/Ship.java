@@ -2,7 +2,9 @@ package com.space.model;
 
 import javax.persistence.*;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 @Entity
 @Table(name = "ship")
@@ -31,7 +33,7 @@ public class Ship {
 
 
     public static void main(String[] args) {
-        Ship ship = new Ship(3l, "Enterprise", "Earth", ShipType.MILITARY,
+        Ship ship = new Ship(3L, "Enterprise", "Earth", ShipType.MILITARY,
                 new Date(), true, 124.0, 34, 9.0);
 
         System.out.println(ship);
@@ -39,6 +41,66 @@ public class Ship {
 
     protected Ship() {
 
+    }
+
+    private int getProdYear() {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(prodDate);
+        return calendar.get(Calendar.YEAR);
+    }
+
+    public void updateRating() {
+        double NEW_SHIP_WEIGHT = 1.0;
+        double OLD_SHIP_WEIGHT = 0.5;
+        rating = 80 * speed * (isUsed? OLD_SHIP_WEIGHT : NEW_SHIP_WEIGHT) / (3019 - getProdYear() + 1);
+        rating =  Math.round(rating * 100) / 100.0;
+    }
+
+    public boolean isEmptyBody() {
+        return name == null && planet == null && shipType == null && prodDate == null &&
+                isUsed == null && speed == null && crewSize == null;
+    }
+
+    public void update(Ship ship) {
+        if (ship.name != null) {
+            name = ship.name;
+        }
+
+        if (ship.planet != null) {
+            planet = ship.planet;
+        }
+
+        if (ship.shipType != null) {
+            shipType = ship.shipType;
+        }
+
+        if (ship.prodDate != null) {
+            prodDate = ship.prodDate;
+        }
+
+        if (ship.isUsed != null) {
+            isUsed = ship.isUsed;
+        }
+
+        if (ship.speed != null) {
+            speed = ship.speed;
+        }
+
+        if (ship.crewSize != null) {
+            crewSize = ship.crewSize;
+        }
+    }
+
+
+    public boolean isCorrect() {
+        if (crewSize < 1 || crewSize > 9999) {
+            return false;
+        }
+        if (getProdYear() < 2800 || getProdYear() > 3019) {
+            return false;
+        }
+        // > 50 chars
+        return name.length() != 0;
     }
 
     public Ship(
@@ -62,6 +124,7 @@ public class Ship {
         this.speed = speed;
         this.crewSize = crewSize;
         this.rating = rating;
+
     }
 
     public Long getId() {
