@@ -52,8 +52,13 @@ public class ShipServiceImpl implements ShipService {
     }
 
     @Override
-    public void delete(Long id) {
-        shipRepository.deleteById(id);
+    public void delete(Long id) throws IllegalArgumentException {
+        try {
+            shipRepository.deleteById(id);
+        }
+        catch(Exception e) {
+            throw new ShipNotFoundException();
+        }
     }
 
     @Override
@@ -66,7 +71,7 @@ public class ShipServiceImpl implements ShipService {
                       Double minSpeed, Double maxSpeed, Integer minCrewSize, Integer maxCrewSize,
                       Double minRating, Double maxRating)
     {
-        long result = shipRepository.count((Specification<Ship>) (root, cq, cb) -> {
+        return shipRepository.count((Specification<Ship>) (root, cq, cb) -> {
             Predicate p = cb.conjunction();
             if (Objects.nonNull(name)) {
                 p = cb.and(p, cb.like(root.get("name"), '%' + name + '%'));
@@ -118,7 +123,6 @@ public class ShipServiceImpl implements ShipService {
 
             return p;
         });
-        return result;
     }
 
     public static class ShipNotFoundException extends IllegalArgumentException {

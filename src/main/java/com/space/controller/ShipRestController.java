@@ -74,6 +74,21 @@ public class ShipRestController {
         }
     }
 
+    @RequestMapping(value = "{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<Ship> deleteShip(@PathVariable("id") Long shipId) {
+        if(shipId <= 0) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            shipService.delete(shipId);
+            return new ResponseEntity<>(HttpStatus.OK);
+        }
+        catch (ShipServiceImpl.ShipNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
+
 
 
 }

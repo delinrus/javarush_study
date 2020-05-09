@@ -11,7 +11,7 @@ public interface ShipService {
     Ship getById(long id);
     void save(Ship ship);
     Ship update(long id, Ship ship) throws IllegalArgumentException;
-    void delete(Long id);
+    void delete(Long id)  throws IllegalArgumentException ;
     List<Ship> getAll();
     long count(String name, String planet, ShipType shipType, Long after, Long before, Boolean isUsed,
                Double minSpeed, Double maxSpeed, Integer minCrewSize, Integer maxCrewSize,
