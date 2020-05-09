@@ -1,6 +1,7 @@
 package com.space.controller;
 
 import com.space.model.Ship;
+import com.space.model.ShipType;
 import com.space.service.ShipService;
 import com.space.service.ShipServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,8 +33,23 @@ public class ShipRestController {
     }
 
     @RequestMapping(path = "/count", method = RequestMethod.GET)
-    public ResponseEntity<Integer> getShipsCount() {
-        Integer count = (int) shipService.count();
+    public ResponseEntity<Integer> getShipsCount(
+            @RequestParam(value = "name", required = false) String name,
+            @RequestParam(value = "planet", required = false) String planet,
+            @RequestParam(value = "shipType", required = false) ShipType shipType,
+            @RequestParam(value = "after", required = false) Long after,
+            @RequestParam(value = "before", required = false) Long before,
+            @RequestParam(value = "isUsed", required = false) Boolean isUsed,
+            @RequestParam(value = "minSpeed", required = false) Double minSpeed,
+            @RequestParam(value = "maxSpeed", required = false) Double maxSpeed,
+            @RequestParam(value = "minCrewSize", required = false) Integer minCrewSize,
+            @RequestParam(value = "maxCrewSize", required = false) Integer maxCrewSize,
+            @RequestParam(value = "minRating", required = false) Double minRating,
+            @RequestParam(value = "maxRating", required = false) Double maxRating
+    ) {
+
+        Integer count = (int) shipService.count(name, planet, shipType, after, before, isUsed,
+                minSpeed, maxSpeed, minCrewSize, maxCrewSize, minRating, maxRating);
         return new ResponseEntity<>(count, HttpStatus.OK);
 
      //   return new ResponseEntity<> (HttpStatus.NOT_FOUND);
