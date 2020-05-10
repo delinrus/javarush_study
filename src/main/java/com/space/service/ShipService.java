@@ -1,10 +1,10 @@
 package com.space.service;
 
+import com.space.controller.ShipOrder;
 import com.space.model.Ship;
 import com.space.model.ShipType;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.data.jpa.domain.Specification;
 
-import java.util.Date;
 import java.util.List;
 
 public interface ShipService {
@@ -12,9 +12,10 @@ public interface ShipService {
     Ship save(Ship ship);
     Ship update(long id, Ship ship) throws IllegalArgumentException;
     void delete(Long id)  throws IllegalArgumentException ;
-    List<Ship> getAll();
-    long count(String name, String planet, ShipType shipType, Long after, Long before, Boolean isUsed,
-               Double minSpeed, Double maxSpeed, Integer minCrewSize, Integer maxCrewSize,
-               Double minRating, Double maxRating);
+    List<Ship> getList(Specification<Ship> spec, Integer pageNum, Integer pageSize);
+    long count(Specification<Ship> spec);
+    Specification<Ship> getSpec(String name, String planet, ShipType shipType, Long after, Long before,
+                                       Boolean isUsed, Double minSpeed, Double maxSpeed, Integer minCrewSize,
+                                       Integer maxCrewSize, Double minRating, Double maxRating, ShipOrder order);
 
 }

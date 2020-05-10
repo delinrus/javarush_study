@@ -56,11 +56,6 @@ public class Ship {
         rating =  Math.round(rating * 100) / 100.0;
     }
 
-    public boolean isEmptyBody() {
-        return name == null && planet == null && shipType == null && prodDate == null &&
-                isUsed == null && speed == null && crewSize == null;
-    }
-
     public void update(Ship ship) {
         if (ship.name != null) {
             name = ship.name;
@@ -106,8 +101,11 @@ public class Ship {
             return  false;
         }
 
-
         if (crewSize < 1 || crewSize > 9999) {
+            return false;
+        }
+
+        if (speed < 0.01 || speed > 0.99) {
             return false;
         }
 
@@ -115,11 +113,7 @@ public class Ship {
             return false;
         }
 
-        if (getProdYear() < 2800 || getProdYear() > 3019) {
-            return false;
-        }
-
-        return true;
+        return getProdYear() >= 2800 && getProdYear() <= 3019;
     }
 
     public Ship(
@@ -216,6 +210,10 @@ public class Ship {
 
     public void setRating(Double rating) {
         this.rating = rating;
+    }
+
+    public void roundSpeedToHundreds() {
+        speed =  Math.round(speed * 100) / 100.0;
     }
 
 }
