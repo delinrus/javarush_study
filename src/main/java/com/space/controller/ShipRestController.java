@@ -51,8 +51,6 @@ public class ShipRestController {
         Integer count = (int) shipService.count(name, planet, shipType, after, before, isUsed,
                 minSpeed, maxSpeed, minCrewSize, maxCrewSize, minRating, maxRating);
         return new ResponseEntity<>(count, HttpStatus.OK);
-
-     //   return new ResponseEntity<> (HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(value = "{id}", method = RequestMethod.POST)
@@ -63,8 +61,7 @@ public class ShipRestController {
 
         try {
             Ship result = shipService.update(shipId, ship);
-            HttpHeaders headers = new HttpHeaders();
-            return new ResponseEntity<>(result, headers, HttpStatus.OK);
+            return new ResponseEntity<>(result, HttpStatus.OK);
         }
         catch (ShipServiceImpl.ShipNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -89,6 +86,18 @@ public class ShipRestController {
         }
     }
 
+    @RequestMapping(method = RequestMethod.POST)
+    public ResponseEntity<Ship> createShip(@RequestBody Ship ship) {
+        if (ship.getUsed() == null) {
+            ship.setUsed(false);
+        }
 
+        if (!ship.isCorrect()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        ship.updateRating();
+        Ship result = shipService.save(ship);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
 
 }

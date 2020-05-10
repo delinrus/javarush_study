@@ -29,8 +29,8 @@ public class ShipServiceImpl implements ShipService {
     }
 
     @Override
-    public void save(Ship ship) {
-        shipRepository.save(ship);
+    public Ship save(Ship ship) {
+        return shipRepository.save(ship);
     }
 
     @Override

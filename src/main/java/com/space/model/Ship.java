@@ -11,7 +11,7 @@ import java.util.GregorianCalendar;
 public class Ship {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String planet;
@@ -93,14 +93,33 @@ public class Ship {
 
 
     public boolean isCorrect() {
+        if ((name == null) || (planet == null) || (shipType == null) ||
+                (prodDate == null) || (speed == null) || (crewSize == null) || (isUsed == null)) {
+             return false;
+        }
+
+        if (name.isEmpty() || planet.isEmpty()) {
+            return false;
+        }
+
+        if(name.length() > 50 || planet.length() > 50) {
+            return  false;
+        }
+
+
         if (crewSize < 1 || crewSize > 9999) {
             return false;
         }
+
+        if(prodDate.getTime() < 0) {
+            return false;
+        }
+
         if (getProdYear() < 2800 || getProdYear() > 3019) {
             return false;
         }
-        // > 50 chars
-        return name.length() != 0;
+
+        return true;
     }
 
     public Ship(
